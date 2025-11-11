@@ -2,5 +2,8 @@
   "dependencies": {
     "cloudinary": "^2.8.0"
   },
+  "scripts": {
+    "deploy": "node --env-file=.env app.js"
+  },
   "type": "module"
 }
