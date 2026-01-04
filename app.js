@@ -24,7 +24,7 @@ async function uploadFolder(folderPath) {
   });
 
   const results = await Promise.all(uploadPromises);
-  return results;
+  return results.map(result => result.original_filename);
 }
 
 const projectID = process.env.VERCEL_PROJECT_ID;
