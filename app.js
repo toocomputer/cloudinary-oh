@@ -108,7 +108,7 @@ async function pollDeploymentStatus(interval = 10000, timeout = 5 * 60 * 1000) {
 
 async function main() {
   try {
-    const results = await uploadFolder('./../../Pictures/OHPICS/_ready');
+    const results = await uploadFolder('./../../Pictures/Mixtape/_0');
     if (results === 'Upload folder empty') {
       console.log('Skipping upload, proceeding to trigger deployment...');
     } else {
