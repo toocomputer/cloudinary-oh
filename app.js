@@ -1,5 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
+import { execSync } from "node:child_process";
 import { v2 as cloudinary } from "cloudinary";
 
 cloudinary.config({
@@ -106,9 +107,11 @@ async function pollDeploymentStatus(interval = 10000, timeout = 5 * 60 * 1000) {
   });
 }
 
+const UPLOAD_FOLDER = path.resolve(process.cwd(), './../../Pictures/Mixtape/_0');
+
 async function main() {
   try {
-    const results = await uploadFolder('./../../Pictures/Mixtape/_0');
+    const results = await uploadFolder(UPLOAD_FOLDER);
     if (results === 'Upload folder empty') {
       console.log('Skipping upload, proceeding to trigger deployment...');
     } else {
@@ -118,6 +121,13 @@ async function main() {
     const triggered = await triggerVercelDeploy();
     if (triggered) {
       await pollDeploymentStatus();
+      if (process.platform === 'darwin') {
+        try {
+          execSync(`open "${UPLOAD_FOLDER}"`, { stdio: 'inherit' });
+        } catch (e) {
+          console.warn('Could not open folder in Finder:', e.message);
+        }
+      }
     } else {
       console.error('Skipping deployment status polling due to trigger failure.');
     }
