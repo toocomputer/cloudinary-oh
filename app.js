@@ -2,6 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { execSync } from "node:child_process";
 import { v2 as cloudinary } from "cloudinary";
+import randomAlphanumericString from "./utils/randomString.js";
 
 cloudinary.config({
   cloud_name: process.env.CLOUD_NAME,
@@ -21,7 +22,10 @@ async function uploadFolder(folderPath) {
 
   const uploadPromises = imageFiles.map((file) => {
     const filePath = path.join(folderPath, file);
-    return cloudinary.uploader.upload(filePath, { folder: process.env.FOLDER_NAME });
+    return cloudinary.uploader.upload(filePath, {
+      folder: process.env.FOLDER_NAME,
+      metadata: { imageid: randomAlphanumericString(8) }
+    });
   });
 
   const results = await Promise.all(uploadPromises);
