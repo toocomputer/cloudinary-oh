@@ -111,6 +111,15 @@ async function pollDeploymentStatus(interval = 10000, timeout = 5 * 60 * 1000) {
   });
 }
 
+function clearUploadFolder(folderPath) {
+  const files = fs.readdirSync(folderPath);
+
+  for (const file of files) {
+    fs.unlinkSync(path.join(folderPath, file));
+  }
+
+}
+
 const UPLOAD_FOLDER = path.resolve(process.cwd(), './../../Pictures/Mixtape/_0');
 
 async function main() {
@@ -125,6 +134,7 @@ async function main() {
     const triggered = await triggerVercelDeploy();
     if (triggered) {
       await pollDeploymentStatus();
+      clearUploadFolder(UPLOAD_FOLDER);
       if (process.platform === 'darwin') {
         try {
           execSync(`open "${UPLOAD_FOLDER}"`, { stdio: 'inherit' });
